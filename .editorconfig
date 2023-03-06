@@ -1,4 +1,4 @@
-root = true
+root = true # set to true for root directory working
 
 [*]
 indent_style = space
@@ -8,5 +8,9 @@ end_of_line = lf
 insert_final_newline = true
 charset = utf-8
 
+[*.ts]
+quote_type = single
+
 [*.md]
-indent_size = 4
+max_line_length = off
+trim_trailing_whitespace = false
