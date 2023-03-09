@@ -11,12 +11,12 @@ class Config {
   public CLIENT_URL: string | undefined;
 
   constructor() {
-    this.DATABASE_URL = process.env.DATABASE_URL || '';
-    this.JWT_TOKEN = process.env.JWT_TOKEN || '';
-    this.NODE_ENV = process.env.NODE_ENV || '';
-    this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE || '';
-    this.SECRET_KEY_TWO = process.env.SECRET_KEY_TWO || '';
-    this.CLIENT_URL = process.env.CLIENT_URL || '';
+    this.DATABASE_URL = process.env.DATABASE_URL;
+    this.JWT_TOKEN = process.env.JWT_TOKEN;
+    this.NODE_ENV = process.env.NODE_ENV;
+    this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE;
+    this.SECRET_KEY_TWO = process.env.SECRET_KEY_TWO;
+    this.CLIENT_URL = process.env.CLIENT_URL;
   }
 
   public validateConfig(): void {
