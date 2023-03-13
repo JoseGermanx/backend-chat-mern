@@ -9,7 +9,7 @@ class Config {
   public SECRET_KEY_ONE: string | undefined;
   public SECRET_KEY_TWO: string | undefined;
   public CLIENT_URL: string | undefined;
-  public SERVER_PORT: string | number | undefined;
+  public SERVER_PORT: string | undefined;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;
