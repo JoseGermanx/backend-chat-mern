@@ -5,8 +5,11 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
+import Logger from 'bunyan';
 import 'express-async-errors';
 import { config } from '../config';
+
+const log: Logger = config.createLogger('server');
 
 export class ChatServer {
   private app: Application;
@@ -53,14 +56,15 @@ export class ChatServer {
       const httpServer: http.Server = new http.Server(app);
       this.startHttpServer(httpServer);
     } catch (error) {
-      console.error(error);
+      log.error(error);
     }
   }
 
   private startHttpServer(httpServer: http.Server): void {
+    log.info(`Server has started with process ${process.pid}`);
     const PORT = Number(config.SERVER_PORT);
     httpServer.listen(PORT, () => {
-      console.log(`Server running at ${PORT}.`);
+      log.info(`Server running at ${PORT}.`);
     });
   }
 }
