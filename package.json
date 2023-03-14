@@ -4,11 +4,12 @@
   "description": "Backend for project Chat Mern with Node and Express",
   "main": "app.ts",
   "scripts": {
-    "dev": "nodemon src/app.ts",
-    "lint:check": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts | ./node_modules/.bin/bunyan",
+    "lint:check": "eslint . --ext .ts",
+    "lint:fix": "npx eslint --fix .",
     "prettier:check": "prettier --check src/**/*.{ts,json}",
-    "prettier:fix": "prettier --write src/**/*.{ts,json}"
+    "prettier:fix": "prettier --write src/**/*.{ts,json}",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "nodemon": "2.0.21",
     "prettier": "2.8.4",
     "ts-node": "10.9.1",
+    "tsc-alias": "1.8.3",
     "tsconfig-paths": "4.1.2",
     "typescript": "4.9.5",
     "typescript-transform-paths": "3.4.6"

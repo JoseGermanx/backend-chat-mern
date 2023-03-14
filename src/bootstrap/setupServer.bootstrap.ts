@@ -7,9 +7,10 @@ import compression from 'compression';
 import cookieSession from 'cookie-session';
 import Logger from 'bunyan';
 import 'express-async-errors';
-import { config } from '../config';
+import { config } from '@configs/configEnvs';
+import { logger } from '@configs/configLogs';
 
-const log: Logger = config.createLogger('server');
+const log: Logger = logger.createLogger('server');
 
 export class ChatServer {
   private app: Application;
@@ -61,7 +62,7 @@ export class ChatServer {
   }
 
   private startHttpServer(httpServer: http.Server): void {
-    log.info(`Server has started with process ${process.pid}`);
+    log.info(`Server has started with process ${process.pid}.`);
     const PORT = Number(config.SERVER_PORT);
     httpServer.listen(PORT, () => {
       log.info(`Server running at ${PORT}.`);
