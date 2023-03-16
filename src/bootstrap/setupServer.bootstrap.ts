@@ -1,4 +1,4 @@
-import { Application, json, urlencoded } from 'express';
+import { Application, json, urlencoded, Request, Response, NextFunction } from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,8 +7,14 @@ import compression from 'compression';
 import cookieSession from 'cookie-session';
 import Logger from 'bunyan';
 import 'express-async-errors';
+import HTTP_STATUS from 'http-status-codes';
+import { Server } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 import { config } from '@configs/configEnvs';
 import { logger } from '@configs/configLogs';
+import { IErrorResponse } from '@helpers/errors/errorResponse.interface';
+import { CustomError } from '@helpers/errors/customError';
 
 const log: Logger = logger.createLogger('server');
 
@@ -22,6 +28,7 @@ export class ChatServer {
   public start(): void {
     this.securityMiddleware(this.app);
     this.standardMiddleware(this.app);
+    this.globalErrorHandler(this.app);
     this.startServer(this.app);
   }
 
@@ -30,7 +37,7 @@ export class ChatServer {
       cookieSession({
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
-        maxAge: 24 * 7 * 3600000, // 24 días
+        maxAge: 24 * 7 * 3600000,
         secure: config.NODE_ENV !== 'development'
       })
     );
@@ -38,8 +45,8 @@ export class ChatServer {
     app.use(helmet());
     app.use(
       cors({
-        origin: config.CLIENT_URL, // '*': esto me permite habilitar mi server a cualquier cliente
-        credentials: true, // config obligatoria para producción para credentials en ambientes cloud
+        origin: config.CLIENT_URL,
+        credentials: true,
         optionsSuccessStatus: 200,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
       })
@@ -52,10 +59,26 @@ export class ChatServer {
     app.use(urlencoded({ extended: true, limit: '50mb' }));
   }
 
+  private globalErrorHandler(app: Application): void {
+    app.all('*', (req: Request, res: Response) => {
+      res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
+    });
+
+    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+      log.error(error);
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json(error.serializeErrors());
+      }
+      next();
+    });
+  }
+
   private async startServer(app: Application): Promise<void> {
     try {
       const httpServer: http.Server = new http.Server(app);
+      const socketIO: Server = await this.createSocketIO(httpServer);
       this.startHttpServer(httpServer);
+      this.socketIOConnections(socketIO);
     } catch (error) {
       log.error(error);
     }
@@ -67,5 +90,24 @@ export class ChatServer {
     httpServer.listen(PORT, () => {
       log.info(`Server running at ${PORT}.`);
     });
+  }
+
+  private async createSocketIO(httpServer: http.Server): Promise<Server> {
+    const io: Server = new Server(httpServer, {
+      cors: {
+        origin: config.CLIENT_URL,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+      }
+    });
+    const pubClient = createClient({ url: config.REDIS_HOST });
+    const subClient = pubClient.duplicate();
+    await Promise.all([pubClient.connect(), subClient.connect()]);
+    io.adapter(createAdapter(pubClient, subClient));
+    return io;
+  }
+
+  private socketIOConnections(io: Server): void {
+    console.log(io);
+    log.info('SocketIO Connections Ok.');
   }
 }
