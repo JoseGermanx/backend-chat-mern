@@ -24,7 +24,7 @@ class Config {
     this.CLIENT_URL = process.env.CLIENT_URL;
     this.SERVER_PORT = process.env.SERVER_PORT;
     this.REDIS_HOST = process.env.REDIS_HOST;
-    this.CLIENT_URL = process.env.CLOUD_NAME;
+    this.CLOUD_NAME = process.env.CLOUD_NAME;
     this.CLOUD_API_KEY = process.env.CLOUD_API_KEY;
     this.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET;
   }
