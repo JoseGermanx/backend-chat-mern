@@ -25,7 +25,8 @@
     "paths": {
       "@bootstrap/*": ["src/bootstrap/*"],
       "@configs/*": ["src/configs/*"],
-      "@features/*": ["src/features/*"],
+      "@auth/*": ["src/features/auth/*"],
+      "@user/*": ["src/features/user/*"],
       "@interfaces/*": ["src/interfaces/http/*"],
       "@decorators/*": ["src/shared/globals/decorators/*"],
       "@helpers/*": ["src/shared/globals/helpers/*"],
