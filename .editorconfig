@@ -1,4 +1,4 @@
-root = true # set to true for root directory working
+root = true
 
 [*]
 indent_style = space

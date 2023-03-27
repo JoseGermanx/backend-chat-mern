@@ -1,5 +1,6 @@
 import { IError } from './error.interface';
 
+// Design Pattern Facade: https://refactoring.guru/es/design-patterns/facade
 export abstract class CustomError extends Error {
   abstract statusCode: number;
   abstract status: string;
