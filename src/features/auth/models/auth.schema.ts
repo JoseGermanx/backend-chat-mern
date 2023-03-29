@@ -3,7 +3,6 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { model, Model, Schema } from 'mongoose';
 import { config } from '@configs/configEnvs';
 
-//const SALT_ROUND = 10;
 // Design Pattern AAA / Security for Design (SBD): https://www.ticportal.es/glosario-tic/seguridad-diseno-sbd
 const authSchema: Schema = new Schema(
   {
