@@ -74,20 +74,33 @@ export class UserCache extends BaseCache {
     }
   }
 
-  /*public async getUserFromCache(userId: string): Promise<IUserDocument> | null {
+  public async getUserFromCache(userId: string): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
 
-      // PENDING IMPLEMENTATION
+      const response: IUserDocument = (await this.client.HGETALL(`users:${userId}`)) as unknown as IUserDocument;
+      response.createdAt = new Date(Generators.parseJson(`${response.createdAt}`));
+      response.postsCount = Generators.parseJson(`${response.postsCount}`);
+      response.blocked = Generators.parseJson(`${response.blocked}`);
+      response.blockedBy = Generators.parseJson(`${response.blockedBy}`);
+      response.notifications = Generators.parseJson(`${response.notifications}`);
+      response.social = Generators.parseJson(`${response.social}`);
+      response.followersCount = Generators.parseJson(`${response.followersCount}`);
+      response.followingCount = Generators.parseJson(`${response.followingCount}`);
+      response.bgImageId = Generators.parseJson(`${response.bgImageId}`);
+      response.bgImageVersion = Generators.parseJson(`${response.bgImageVersion}`);
+      response.profilePicture = Generators.parseJson(`${response.profilePicture}`);
+      response.work = Generators.parseJson(`${response.work}`);
+      response.school = Generators.parseJson(`${response.school}`);
+      response.location = Generators.parseJson(`${response.location}`);
+      response.quote = Generators.parseJson(`${response.quote}`);
 
+      return response;
     } catch (error) {
+      log.error(error);
       throw new ServerError('Server Redis error. Try again.');
     }
-  }*/
+  }
 }
-
-
-
-

@@ -1,5 +1,5 @@
 import { hash, compare } from 'bcryptjs';
-import { IAuthDocument } from '@auth/interfaces/auth.interface';
+import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
 import { model, Model, Schema } from 'mongoose';
 import { config } from '@configs/configEnvs';
 

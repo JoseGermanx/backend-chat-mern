@@ -21,11 +21,12 @@ export class Generators {
     return parseInt(result, 10);
   }
 
-  static parseJson(prop: string): unknown {
+  static parseJson(prop: string) {
     try {
       JSON.parse(prop);
     } catch (error) {
       return prop;
     }
+    return JSON.parse(prop);
   }
 }
