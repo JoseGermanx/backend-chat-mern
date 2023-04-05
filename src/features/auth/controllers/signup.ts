@@ -3,18 +3,27 @@ import { Request, Response } from 'express';
 import { joiValidation } from '@decorators/joi-validation.decorators';
 import { signupSchema } from '@auth/schemes/signup';
 import { authService } from '@services/db/auth.service';
-//import { UserCache } from '@services/redis/user.cache';
+import { UserCache } from '@services/redis/user.cache';
 import { BadRequestError } from '@helpers/errors/badRequestError';
 import { Generators } from '@helpers/generators/generators';
 import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
 import { ISignUpData } from '@auth/interfaces/signUpData.interface';
+import { UploadApiResponse } from 'cloudinary';
+import { uploads } from '@helpers/cloudinary/cloudinaryUploads';
+import { IUserDocument } from '@user/interfaces/userDocument.interface';
+import { omit } from 'lodash';
+import { userQueue } from '@services/queues/user.queue';
+import { authQueue } from '@services/queues/auth.queue';
+import JWT from 'jsonwebtoken';
+import { config } from '@configs/configEnvs';
+import HTTP_STATUS from 'http-status-codes';
 
-//const userCache: UserCache = new UserCache();
+const userCache: UserCache = new UserCache();
 
 export class SignUp {
   @joiValidation(signupSchema)
   public async create(req: Request, res: Response): Promise<void> {
-    const { username, email, password, avatarColor } = req.body;
+    const { username, email, password, avatarColor, avatarImage } = req.body;
     const checkIfUserExist = await authService.getUserByUsernameOrEmail(username, email);
     if (checkIfUserExist) {
       throw new BadRequestError('Invalid credentials for this user');
@@ -31,8 +40,46 @@ export class SignUp {
       password,
       avatarColor
     });
+
+    // uploads
+    const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`)) as UploadApiResponse;
+    if (!result?.public_id) {
+      throw new BadRequestError('File upload: Error ocurred. Try again.');
+    }
+
+    // Add to redis cache
+    const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+    userDataForCache.profilePicture = `https://res.cloudinary.com/escalab-academy/image/upload/v${result.version}/${userObjectId}`;
+    await userCache.saveToUserCache(`${userObjectId}`, uId, userDataForCache);
+
+    // Add to database
+    omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
+    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+    userQueue.addUserJob('addUserToDb', { value: userDataForCache });
+
+    const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
+    req.session = { jwt: userJwt };
+
+    res
+      .status(HTTP_STATUS.CREATED)
+      .json({ message: 'User created succesfully', user: userDataForCache, token: userJwt });
   }
 
+  // firmar los datos de authentication para luego liberar el token
+  private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor
+      },
+      config.JWT_TOKEN!
+    );
+  }
+
+  // validar la entrada y salida de datos de auth del registro
   private signUpData(data: ISignUpData): IAuthDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {
@@ -44,5 +91,43 @@ export class SignUp {
       avatarColor,
       createdAt: new Date()
     } as IAuthDocument;
+  }
+
+  // validar la entrada y salida de datos del usuario en el registro
+  private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
+    const { _id, username, email, uId, password, avatarColor } = data;
+    return {
+      _id: userObjectId,
+      authId: _id,
+      uId,
+      username: Generators.firstLetterUppercase(username),
+      email,
+      password,
+      avatarColor,
+      profilePicture: '',
+      blocked: [],
+      blockedBy: [],
+      work: '',
+      location: '',
+      school: '',
+      quote: '',
+      bgImageVersion: '',
+      bgImageId: '',
+      followersCount: 0,
+      followingCount: 0,
+      postsCount: 0,
+      notifications: {
+        messages: true,
+        reactions: true,
+        comments: true,
+        follows: true
+      },
+      social: {
+        facebook: '',
+        instagram: '',
+        twitter: '',
+        youtube: ''
+      }
+    } as unknown as IUserDocument;
   }
 }
