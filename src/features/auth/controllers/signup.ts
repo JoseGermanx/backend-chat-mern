@@ -15,6 +15,7 @@ import { userQueue } from '@services/queues/user.queue';
 import { authQueue } from '@services/queues/auth.queue';
 import HTTP_STATUS from 'http-status-codes';
 import { SignUpUtility } from './utilities/signup.utility';
+import { config } from '@configs/configEnvs';
 
 const userCache: UserCache = new UserCache();
 
@@ -30,12 +31,13 @@ export class SignUp extends SignUpUtility {
     const authObjectId: ObjectId = new ObjectId();
     const userObjectId: ObjectId = new ObjectId();
     const uId = `${Generators.generateRandomIntegers(12)}`;
+    const passwordHash = await Generators.hash(password);
     const authData: IAuthDocument = SignUp.prototype.signUpData({
       _id: authObjectId,
       uId,
       username,
       email,
-      password,
+      password: passwordHash,
       avatarColor
     });
 
@@ -47,13 +49,13 @@ export class SignUp extends SignUpUtility {
 
     // Add to redis cache
     const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
-    userDataForCache.profilePicture = `https://res.cloudinary.com/escalab-academy/image/upload/v${result.version}/${userObjectId}`;
+    userDataForCache.profilePicture = `${config.CLOUD_DOMAIN}/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveToUserCache(`${userObjectId}`, uId, userDataForCache);
 
     // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
-    userQueue.addUserJob('addUserToDb', { value: userDataForCache });
+    authQueue.addAuthUserJob('addAuthUserToDB', { value: userDataForCache });
+    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
     req.session = { jwt: userJwt };
