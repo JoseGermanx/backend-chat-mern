@@ -12,17 +12,10 @@ class UserService {
       { $match: { _id: new mongoose.Types.ObjectId(userId) } },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
-      { $project: this.aggregateProject() },
+      { $project: this.aggregateProject() }
     ]);
     return users[0];
   }
-
-  /*public async getUserByIdWithPopulate(userId: string): Promise<IUserDocument> {
-    const user: IUserDocument = await UserModel
-      .findOne({ _id: new mongoose.Types.ObjectId(userId) })
-      .populate('authId', { username: 0, email: 0 }) as IUserDocument;
-      return user;
-  }*/
 
   private aggregateProject() {
     return {

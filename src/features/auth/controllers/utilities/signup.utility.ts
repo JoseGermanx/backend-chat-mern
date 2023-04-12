@@ -7,7 +7,6 @@ import { Generators } from '@helpers/generators/generators';
 import { IUserDocument } from '@user/interfaces/userDocument.interface';
 
 export abstract class SignUpUtility {
-  // firmar los datos de authentication para luego liberar el token
   protected signToken(data: IAuthDocument, userObjectId: ObjectId): string {
     return JWT.sign(
       {
@@ -21,7 +20,6 @@ export abstract class SignUpUtility {
     );
   }
 
-  // validar la entrada y salida de datos de auth del registro
   protected signUpData(data: ISignUpData): IAuthDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {
@@ -35,7 +33,6 @@ export abstract class SignUpUtility {
     } as IAuthDocument;
   }
 
-  // validar la entrada y salida de datos del usuario en el registro
   protected userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {

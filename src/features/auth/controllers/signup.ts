@@ -41,18 +41,15 @@ export class SignUp extends SignUpUtility {
       avatarColor
     });
 
-    // uploads
     const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`)) as UploadApiResponse;
     if (!result?.public_id) {
       throw new BadRequestError('File upload: Error ocurred. Try again.');
     }
 
-    // Add to redis cache
     const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
     userDataForCache.profilePicture = `${config.CLOUD_DOMAIN}/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveToUserCache(`${userObjectId}`, uId, userDataForCache);
 
-    // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserToDB', { value: userDataForCache });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });

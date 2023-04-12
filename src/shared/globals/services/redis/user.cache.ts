@@ -89,18 +89,11 @@ export class UserCache extends BaseCache {
       response.social = Generators.parseJson(`${response.social}`);
       response.followersCount = Generators.parseJson(`${response.followersCount}`);
       response.followingCount = Generators.parseJson(`${response.followingCount}`);
-      response.bgImageId = Generators.parseJson(`${response.bgImageId}`);
-      response.bgImageVersion = Generators.parseJson(`${response.bgImageVersion}`);
-      response.profilePicture = Generators.parseJson(`${response.profilePicture}`);
-      response.work = Generators.parseJson(`${response.work}`);
-      response.school = Generators.parseJson(`${response.school}`);
-      response.location = Generators.parseJson(`${response.location}`);
-      response.quote = Generators.parseJson(`${response.quote}`);
 
       return response;
     } catch (error) {
       log.error(error);
-      throw new ServerError('Server Redis error. Try again.');
+      throw new ServerError('Server error. Try again.');
     }
   }
 }
