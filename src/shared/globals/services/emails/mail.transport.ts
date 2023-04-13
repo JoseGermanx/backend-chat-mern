@@ -14,6 +14,7 @@ interface IMailOptions {
 }
 
 const log: Logger = logger.createLogger('mailOptions');
+sendGridMail.setApiKey(config.SENGRID_API_KEY!);
 
 class MailTransport {
   public async sendMail(receiverEmail: string, subject: string, body: string): Promise<void> {
@@ -35,13 +36,38 @@ class MailTransport {
       }
     });
 
-    // mail options object
+    const mailOptions: IMailOptions = {
+      from: `Chat App <${config.SENDER_EMAIL}>`,
+      to: receiverEmail,
+      subject,
+      html: body
+    };
 
-    // try/catch
+    try {
+      await transporter.sendMail(mailOptions);
+      log.info('Development email sent successfully');
+    } catch (error) {
+      log.error('Error sending email ', error);
+      throw new BadRequestError('Error sending email ');
+    }
   }
 
   private async productionEmailSender(receiverEmail: string, subject: string, body: string) {
-    //
+
+    const mailOptions: IMailOptions = {
+      from: `Chat App <${config.SENDER_EMAIL}>`, // luego cambiarlo a las credenciales de sengrid
+      to: receiverEmail,
+      subject,
+      html: body
+    };
+
+    try {
+        await sendGridMail.send(mailOptions);
+      log.info('Development email sent successfully');
+    } catch (error) {
+      log.error('Error sending email ', error);
+      throw new BadRequestError('Error sending email ');
+    }
   }
 }
 
