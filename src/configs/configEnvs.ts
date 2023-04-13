@@ -18,6 +18,8 @@ class Config {
   public SALT_ROUND: string | undefined;
   public CLOUD_DOMAIN: string | undefined;
   public BASE_PATH: string | undefined;
+  public SENDER_EMAIL: string | undefined;
+  public SENDER_EMAIL_PASSWORD: string | undefined;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;
@@ -34,6 +36,8 @@ class Config {
     this.SALT_ROUND = process.env.SALT_ROUND;
     this.CLOUD_DOMAIN = process.env.CLOUD_DOMAIN;
     this.BASE_PATH = process.env.BASE_PATH;
+    this.SENDER_EMAIL = process.env.SENDER_EMAIL;
+    this.SENDER_EMAIL_PASSWORD = process.env.SENDER_EMAIL_PASSWORD;
   }
 
   public validateConfig(): void {
