@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import sendGridMail from '@sendgrid/mail';
 import Logger from 'bunyan';
+import sendGridMail from '@sendgrid/mail';
 import { logger } from '@configs/configLogs';
 import { config } from '@configs/configEnvs';
 import { BadRequestError } from '@helpers/errors/badRequestError';
@@ -14,10 +14,10 @@ interface IMailOptions {
 }
 
 const log: Logger = logger.createLogger('mailOptions');
-sendGridMail.setApiKey(config.SENGRID_API_KEY!);
+sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
 
 class MailTransport {
-  public async sendMail(receiverEmail: string, subject: string, body: string): Promise<void> {
+  public async sendEmail(receiverEmail: string, subject: string, body: string): Promise<void> {
     if (config.NODE_ENV === 'test' || config.NODE_ENV === 'development') {
       this.developmentEmailSender(receiverEmail, subject, body);
     } else {
@@ -25,19 +25,23 @@ class MailTransport {
     }
   }
 
-  private async developmentEmailSender(receiverEmail: string, subject: string, body: string) {
+
+  private async developmentEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
     const transporter: Mail = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
       secure: false,
       auth: {
-        user: config.SENDER_EMAIL,
-        pass: config.SENDER_EMAIL_PASSWORD
+        user: config.SENDER_EMAIL!,
+        pass: config.SENDER_EMAIL_PASSWORD!,
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
     const mailOptions: IMailOptions = {
-      from: `Chat App <${config.SENDER_EMAIL}>`,
+      from: `Chat App <${config.SENDER_EMAIL!}>`,
       to: receiverEmail,
       subject,
       html: body
@@ -45,28 +49,27 @@ class MailTransport {
 
     try {
       await transporter.sendMail(mailOptions);
-      log.info('Development email sent successfully');
+      log.info('Development email sent successfully.');
     } catch (error) {
-      log.error('Error sending email ', error);
-      throw new BadRequestError('Error sending email ');
+      log.error('Error sending email', error);
+      throw new BadRequestError('Error sending email');
     }
   }
 
-  private async productionEmailSender(receiverEmail: string, subject: string, body: string) {
-
+  private async productionEmailSender(receiverEmail: string, subject: string, body: string): Promise<void> {
     const mailOptions: IMailOptions = {
-      from: `Chat App <${config.SENDER_EMAIL}>`, // luego cambiarlo a las credenciales de sengrid
+      from: `Chat App <${config.SENDER_EMAIL!}>`,
       to: receiverEmail,
       subject,
       html: body
     };
 
     try {
-        await sendGridMail.send(mailOptions);
-      log.info('Development email sent successfully');
+      await sendGridMail.send(mailOptions);
+      log.info('Production email sent successfully.');
     } catch (error) {
-      log.error('Error sending email ', error);
-      throw new BadRequestError('Error sending email ');
+      log.error('Error sending email', error);
+      throw new BadRequestError('Error sending email');
     }
   }
 }

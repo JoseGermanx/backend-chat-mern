@@ -20,7 +20,7 @@ class Config {
   public BASE_PATH: string | undefined;
   public SENDER_EMAIL: string | undefined;
   public SENDER_EMAIL_PASSWORD: string | undefined;
-  public SENGRID_API_KEY: string | undefined;
+  public SENDGRID_API_KEY: string | undefined;
   public SENGRID_SENDER: string | undefined;
 
   constructor() {
@@ -40,7 +40,7 @@ class Config {
     this.BASE_PATH = process.env.BASE_PATH;
     this.SENDER_EMAIL = process.env.SENDER_EMAIL;
     this.SENDER_EMAIL_PASSWORD = process.env.SENDER_EMAIL_PASSWORD;
-    this.SENGRID_API_KEY = process.env.SENGRID_API_KEY || '';
+    this.SENDGRID_API_KEY = process.env.SENGRID_API_KEY || '';
     this.SENGRID_SENDER = process.env.SENGRID_SENDER || '';
   }
 
