@@ -49,7 +49,7 @@ withCredentials: true
 }
 
 ###
-GET {{baseUrl}}/{{urlPath}}/reset-password/as271283718738912798327983121
+GET {{baseUrl}}/{{urlPath}}/reset-password/d8f25aad1b92d90cf2ccbab60b7ef7f4bffe4c6a
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
