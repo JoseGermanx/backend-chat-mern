@@ -19,9 +19,6 @@ const passwordSchema: ObjectSchema = Joi.object().keys({
     'any.only': 'Passwords should match',
     'any.required': 'Confirm password is a required field'
   }),
-  /*token: Joi.string().required().token().messages({
-    'any.required': 'Token is a required valid field'
-  })*/
 });
 
 export { emailSchema, passwordSchema };
