@@ -24,7 +24,7 @@ export class Password {
       throw new BadRequestError('Invalid credentials');
     }
 
-    const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20)); // ej: <Buffer a5 8b b5 73 55 8a 77 8c 6a 5a 9a ff 4a 6e 7f a3 f3 17 5f 4e>
+    const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(Number(config.RANDOM_BYTES))); // ej: <Buffer a5 8b b5 73 55 8a 77 8c 6a 5a 9a ff 4a 6e 7f a3 f3 17 5f 4e>
     const randomCharacters: string = randomBytes.toString('hex'); // ej: a58bb573558a778c6a5a9aff4a6e7fa3f3175f4e representa una cadena con números del 0-9 y de la a-f
 
     await authService.updatePasswordToken(`${existingUser._id}`, randomCharacters, Date.now() * 60 * 60 * 1000);
@@ -64,6 +64,6 @@ export class Password {
       receiverEmail: existingUser.email,
       subject: 'Password Reset Confirmation'
     });
-    res.status(HTTP_STATUS.OK).json({ message: 'Password successfully updated. ' });
+    res.status(HTTP_STATUS.OK).json({ message: 'Password successfully updated.' });
   }
 }

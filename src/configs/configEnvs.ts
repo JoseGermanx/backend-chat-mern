@@ -22,6 +22,8 @@ class Config {
   public SENDER_EMAIL_PASSWORD: string | undefined;
   public SENDGRID_API_KEY: string | undefined;
   public SENGRID_SENDER: string | undefined;
+  public RANDOM_BYTES: string | undefined;
+
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;
@@ -42,6 +44,7 @@ class Config {
     this.SENDER_EMAIL_PASSWORD = process.env.SENDER_EMAIL_PASSWORD;
     this.SENDGRID_API_KEY = process.env.SENGRID_API_KEY || '';
     this.SENGRID_SENDER = process.env.SENGRID_SENDER || '';
+    this.RANDOM_BYTES = process.env.RANDOM_BYTES;
   }
 
   public validateConfig(): void {
