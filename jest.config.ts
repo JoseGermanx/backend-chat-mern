@@ -12,7 +12,7 @@ const config: Config.InitialOptions = {
     '^.+\\.ts?$': 'ts-jest'
   },
   testMatch: ['<rootDir>/src/**/test/*.ts'], // me permite definir donde se van a ir a leer los test, en que directorio
-  // OJO!
+  // OBSERVACIÓN!
   collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**'], // me permite definir a partir de que directorio voy a capturar la cobertura de test
   coverageThreshold: { // me permite agregar los umbrales de verificación para la cobertura de test
     global: {

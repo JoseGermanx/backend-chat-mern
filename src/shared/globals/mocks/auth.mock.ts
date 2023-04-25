@@ -42,7 +42,7 @@ export const authUserPayload: AuthPayload = { // estructura de mock como datos a
   uId: '1621613119252066',
   username: 'Yorman',
   email: 'yorman@gmail.com',
-  avatarColor: '#9c27b0',
+  avatarColor: '#9c27b0', // morado
   iat: 12345
 };
 
