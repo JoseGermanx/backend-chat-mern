@@ -1,15 +1,22 @@
 import mongoose from 'mongoose';
-import { config } from 'src/config';
+import Logger from 'bunyan';
+import { config } from '@configs/configEnvs';
+import { logger } from '@configs/configLogs';
+import { redisConnection } from '@services/redis/redis.connection';
 
+const log: Logger = logger.createLogger('setupDatabase');
+
+// Design Pattern Singleton: https://refactoring.guru/es/design-patterns/singleton
 export default () => {
   const connect = () => {
     mongoose
       .connect(`${config.DATABASE_URL}`)
       .then(() => {
-        console.log('Succesfully connected to database.');
+        log.info('Successfully connected to database.');
+        redisConnection.connect();
       })
       .catch(error => {
-        console.log('Error connecting to database', error);
+        log.error('Error connecting to database', error);
         return process.exit(1);
       });
   };
