@@ -81,3 +81,4 @@ export const signUpMockData = { // estructura de dato que se genera del usuario 
   notifications: { messages: true, reactions: true, comments: true, follows: true },
   profilePicture: 'https://res.cloudinary.com/escalab-academy/image/upload/v1682432288/6447e12032c72ead5abd2333.jpg'
 };
+
