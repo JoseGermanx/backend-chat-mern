@@ -13,10 +13,11 @@ export const authMockRequest = (sessionData: IJWT, body: IAuthMock, currentUser?
 });
 
 // MOCK 2: RESPONSE
-export const authMockResponse = () => {
+export const authMockResponse = (): Response => {
   const res: Response = {} as Response;
   res.status = jest.fn().mockReturnValue(res); // simular el código de status
   res.json = jest.fn().mockReturnValue(res); // simularemos los datos con los retorne el json
+  return res;
 };
 
 // INTERFACES
@@ -54,7 +55,7 @@ export const authMock = { // estructura de mock como documento
   avatarColor: '#9c27b0',
   createdAt: new Date(),
   save: () => {}
-} as IAuthDocument;
+} as unknown as IAuthDocument;
 
 export const signUpMockData = { // estructura de dato que se genera del usuario una vez de autentica, por ej: en signup process
   _id: '605727cd646eb50e668a4e13',
@@ -80,3 +81,4 @@ export const signUpMockData = { // estructura de dato que se genera del usuario 
   notifications: { messages: true, reactions: true, comments: true, follows: true },
   profilePicture: 'https://res.cloudinary.com/escalab-academy/image/upload/v1682432288/6447e12032c72ead5abd2333.jpg'
 };
+
