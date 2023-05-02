@@ -3,11 +3,13 @@ import * as cloudinaryUploads from '@helpers/cloudinary/cloudinaryUploads';
 import { userQueue } from '@services/queues/user.queue';
 import { authQueue } from '@services/queues/auth.queue';
 import { UserCache } from '@services/redis/user.cache';
-import { authMock, authMockRequest } from '@root/shared/globals/mocks/auth.mock';
+import { IJWT, authMock, authMockRequest, imageMock } from '@root/shared/globals/mocks/auth.mock';
 import { authMockResponse } from '@root/shared/globals/mocks/auth.mock';
 import { SignUp } from '../signup';
 import { CustomError } from '@helpers/errors/customError';
 import { authService } from '@services/db/auth.service';
+import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+import { Iimage } from '@helpers/cloudinary/imageResult.interface';
 
 jest.useFakeTimers();
 jest.mock('@services/queues/base.queue');
@@ -27,8 +29,8 @@ describe('Signup', () => {
   });
 
   // Design Pattern: https://martinfowler.com/bliki/GivenWhenThen.html
-  // Unitary test 1
-  it('should throw an error if username is not available', () => {
+  // UNITARY TEST 1
+  it('should throw an error if username is not available', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -44,7 +46,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -52,8 +54,33 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 2
-  it('should throw an error if username length is greater than maximum length', () => {
+  // UNITARY TEST 2
+  it('should throw an error if username length is less than minimum length', async () => {
+
+    // GIVEN STEP
+    const req: Request = authMockRequest(
+      {},
+      {
+        username: 'ma',
+        email: 'manny@test.com',
+        password: 'qwerty',
+        avatarColor: 'red',
+        avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+      }
+    ) as Request;
+    const res: Response = authMockResponse();
+
+    // WHEN STEP
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
+
+    // THEN STEP: ASSERT
+      expect(error.statusCode).toEqual(400);
+      expect(error.serializeErrors().message).toEqual('Invalid username');
+    });
+  });
+
+  // UNITARY TEST 3
+  it('should throw an error if username length is greater than maximum length', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -69,7 +96,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -77,8 +104,8 @@ describe('Signup', () => {
     });
   });
 
-   // Unitary test 3
-  it('should throw an error if email is not valid', () => {
+  // UNITARY TEST 4
+  it('should throw an error if email is not valid', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -94,7 +121,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -102,7 +129,7 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 4
+  // UNITARY TEST 5
   it('should throw an error if email is not available', () => {
 
     // GIVEN STEP
@@ -127,8 +154,8 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 5
-  it('should throw an error if password is not available', () => {
+  // UNITARY TEST 6
+  it('should throw an error if password is not available', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -144,7 +171,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -152,8 +179,8 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 6
-  it('should throw an error if password length is less than minimum length', () => {
+  // UNITARY TEST 7
+  it('should throw an error if password length is less than minimum length', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -169,7 +196,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -177,8 +204,8 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 7
-  it('should throw an error if password length is greater than maximum length', () => {
+  // UNITARY TEST 8
+  it('should throw an error if password length is greater than maximum length', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -194,7 +221,7 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     // WHEN STEP
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -202,8 +229,8 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 8: Integration Tests
-  it('should throw unhatorize error is user already exist', () => {
+  // INTEGRATION TEST 1
+  it('should throw unhatorize error is user already exist', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -220,7 +247,7 @@ describe('Signup', () => {
 
     // WHEN STEP
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(authMock);
-    SignUp.prototype.create(req, res).catch((error: CustomError) => {
+    await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
     // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
@@ -228,8 +255,8 @@ describe('Signup', () => {
     });
   });
 
-  // Unitary test 9: Integration Tests
-  /*it('should set session data for valid credentials and send correct json response for user create successfully', () => {
+  // INTEGRATION TEST 2
+  it('should set session data for valid credentials and send correct json response for user create successfully', async () => {
 
     // GIVEN STEP
     const req: Request = authMockRequest(
@@ -246,13 +273,24 @@ describe('Signup', () => {
 
     // WHEN STEP
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(null!);
-    //const userSpy = jest.spyOn(UserCache.prototype, 'saveToUserCache');
+    jest
+      .spyOn(cloudinaryUploads, 'uploads')
+      .mockImplementation(() =>
+        Promise.resolve<UploadApiResponse | UploadApiErrorResponse | undefined | Iimage>(imageMock)
+      );
+    const userSpy = jest.spyOn(UserCache.prototype, 'saveToUserCache');
+    jest.spyOn(userQueue, 'addUserJob');
+    jest.spyOn(authQueue, 'addAuthUserJob');
 
-    SignUp.prototype.create(req, res);
+    await SignUp.prototype.create(req, res);
 
-    // THEN STEP: ASSERT
-      //expect(error.statusCode).toEqual(400);
-      //expect(error.serializeErrors().message).toEqual('Invalid credentials for this user');
-    });*/
+    // THEN STEP
+    expect(req.session?.jwt as IJWT).toBeDefined();
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'User created successfully',
+      user: userSpy.mock.calls[0][2],
+      token: req.session?.jwt
+    });
+  });
 });
-

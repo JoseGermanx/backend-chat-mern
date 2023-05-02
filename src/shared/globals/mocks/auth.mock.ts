@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthPayload } from '@auth/interfaces/authPayload.interface';
 import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
+import { Iimage } from '@helpers/cloudinary/imageResult.interface';
 
 // GIVEN STEP
 
@@ -51,6 +52,7 @@ export const authMock = { // estructura de mock como documento
   id: '60263f14648fed5246e322d3',
   uId: '1621613119252066',
   username: 'Yorman',
+  password: 'yordev',
   email: 'yorman@gmail.com',
   avatarColor: '#9c27b0',
   createdAt: new Date(),
@@ -82,3 +84,14 @@ export const signUpMockData = { // estructura de dato que se genera del usuario 
   profilePicture: 'https://res.cloudinary.com/escalab-academy/image/upload/v1682432288/6447e12032c72ead5abd2333.jpg'
 };
 
+export const imageMock = {
+  version: '1234737373',
+  public_id: '123456'
+} as Iimage;
+
+export const PASSWORD = 'yordev';
+export const USERNAME = 'Yorman';
+export const WRONG_USERNAME = 'yo';
+export const LONG_USERNAME = 'yormandevelopermaximum';
+export const WRONG_PASSWORD = 'yor';
+export const LONG_PASSWORD = 'yordevtellitoamaro';
