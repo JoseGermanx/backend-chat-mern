@@ -59,6 +59,6 @@ export class SignUp extends SignUpUtility {
 
     res
       .status(HTTP_STATUS.CREATED)
-      .json({ message: 'User created succesfully', user: userDataForCache, token: userJwt });
+      .json({ message: 'User created successfully', user: userDataForCache, token: userJwt });
   }
 }
