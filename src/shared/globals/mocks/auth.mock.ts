@@ -95,3 +95,4 @@ export const WRONG_USERNAME = 'yo';
 export const LONG_USERNAME = 'yormandevelopermaximum';
 export const WRONG_PASSWORD = 'yor';
 export const LONG_PASSWORD = 'yordevtellitoamaro';
+export const JWT = '12djdj34';
