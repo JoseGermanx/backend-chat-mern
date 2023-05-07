@@ -19,9 +19,14 @@ import { Generators } from '@helpers/generators/generators';
 jest.useFakeTimers();
 
 describe('SignIn', () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
 
-  afterEach(() => {});
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.clearAllTimers();
+  });
 
   // UNITARY TEST 1
   it('should throw an error if username is not available', async () => {

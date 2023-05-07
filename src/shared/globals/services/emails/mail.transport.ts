@@ -14,7 +14,7 @@ interface IMailOptions {
 }
 
 const log: Logger = logger.createLogger('mailOptions');
-sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
+//sendGridMail.setApiKey(config.SENDGRID_API_KEY!);
 
 class MailTransport {
   public async sendEmail(receiverEmail: string, subject: string, body: string): Promise<void> {
