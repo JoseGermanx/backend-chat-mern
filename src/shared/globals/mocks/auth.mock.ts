@@ -97,3 +97,7 @@ export const WRONG_PASSWORD = 'yor';
 export const LONG_PASSWORD = 'yordevtellitoamaro';
 export const JWT = '12djdj34';
 export const INVALID_EMAIL = 'yormangmail.com';
+
+// PASSWORD TESTS
+export const WRONG_EMAIL = 'test@gmail.com';
+export const CORRECT_EMAIL = 'yorman@gmail.com';

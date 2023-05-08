@@ -8,8 +8,9 @@ jest.mock('@configs/configEnvs');
 jest.mock('@services/redis/redis.connection');
 
 describe('Mongo and Redis database connections', () => {
-  beforeEach(() => {
+  beforeEach((done: jest.DoneCallback) => {
     jest.resetAllMocks();
+    done();
   });
 
   afterEach((done: jest.DoneCallback) => {

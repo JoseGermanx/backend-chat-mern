@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   verbose: true,
   coverageDirectory: 'coverage',
-  collectCoverage: false,
+  collectCoverage: true,
   testPathIgnorePatterns: ['/node_modules/'],
   transform: {
     '^.+\\.ts?$': 'ts-jest'
