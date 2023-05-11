@@ -12,6 +12,8 @@ class AuthRoutes {
   }
 
   public routes(): Router {
+    // Design Pattern Mediator: https://refactoring.guru/es/design-patterns/mediator
+    // Design Pattern Prototype: https://refactoring.guru/es/design-patterns/prototype
     this.router.post('/signup', SignUp.prototype.create);
     this.router.post('/signin', SignIn.prototype.read);
     this.router.post('/forgot-password', Password.prototype.create);

@@ -2,6 +2,7 @@ import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
 import { AuthModel } from '@auth/models/auth.schema';
 import { Generators } from '@helpers/generators/generators';
 
+// Solid Principle: Open/Close, Single Responsability
 class AuthService {
   public async createAuthUser(data: IAuthDocument): Promise<void> {
     await AuthModel.create(data);

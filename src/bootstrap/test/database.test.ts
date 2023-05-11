@@ -6,8 +6,10 @@ import { redisConnection } from '@services/redis/redis.connection';
 jest.useFakeTimers();
 jest.mock('@configs/configEnvs');
 jest.mock('@services/redis/redis.connection');
+jest.mock('@configs/configLogs');
 
 describe('Mongo and Redis database connections', () => {
+
   beforeEach((done: jest.DoneCallback) => {
     jest.resetAllMocks();
     done();
@@ -46,10 +48,10 @@ describe('Mongo and Redis database connections', () => {
 
     // WHEN STEP
     connect(expectedUrl);
+    jest.spyOn(redisConnection, 'connect');
 
     // THEN STEP: ASSERTION
     expect(spy).toHaveBeenCalledWith(expectedUrl);
-    jest.spyOn(redisConnection, 'connect');
     expect(spy).toHaveBeenCalledTimes(1);
     done();
   });
