@@ -35,8 +35,14 @@
       "@root/*": ["src/*"]
     }
   },
-  "exclude": ["node_modules"] /* te permite excluir del proceso de compilación el node_modules */,
   "include": [
-    "src/**/*.ts"
-  ] /* te permite incluir en el proceso de compilación tu directorio de trabajo donde tienes tus .ts */
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ] /* te permite incluir en el proceso de compilación tu directorio de trabajo donde tienes tus .ts */,
+  "exclude": [
+    "node_modules",
+    "src/features/auth/controllers/test",
+    "src/bootstrap/test",
+    "src/shared/globals/mocks"
+  ] /* te permite excluir del proceso de compilación el node_modules */
 }
