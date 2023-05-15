@@ -35,7 +35,6 @@ export class ChatServer {
   }
 
   private securityMiddleware(app: Application): void {
-    // Design pattern Synchronizer Token Pattern: https://medium.com/@kaviru.mihisara/synchronizer-token-pattern-e6b23f53518e
     app.use(
       cookieSession({
         name: 'session',
