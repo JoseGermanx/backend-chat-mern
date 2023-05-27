@@ -2,7 +2,6 @@ import { compare } from 'bcryptjs';
 import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
 import { model, Model, Schema } from 'mongoose';
 
-// Design Pattern AAA / Security for Design (SBD): https://www.ticportal.es/glosario-tic/seguridad-diseno-sbd
 const authSchema: Schema = new Schema(
   {
     username: { type: 'String' },

@@ -28,11 +28,8 @@ describe('Signup', () => {
     jest.clearAllTimers();
   });
 
-  // Design Pattern: https://martinfowler.com/bliki/GivenWhenThen.html
-  // UNITARY TEST 1
   it('should throw an error if username is not available', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -45,19 +42,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Username is a required field');
     });
   });
 
-  // UNITARY TEST 2
   it('should throw an error if username length is less than minimum length', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -70,19 +63,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid username');
     });
   });
 
-  // UNITARY TEST 3
   it('should throw an error if username length is greater than maximum length', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -95,19 +84,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid username');
     });
   });
 
-  // UNITARY TEST 4
   it('should throw an error if email is not valid', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -120,19 +105,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Email must be valid');
     });
   });
 
-  // UNITARY TEST 5
   it('should throw an error if email is not available', () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -145,19 +126,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Email is a required field');
     });
   });
 
-  // UNITARY TEST 6
   it('should throw an error if password is not available', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -170,19 +147,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Password is a required field');
     });
   });
 
-  // UNITARY TEST 7
   it('should throw an error if password length is less than minimum length', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -195,19 +168,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid password');
     });
   });
 
-  // UNITARY TEST 8
   it('should throw an error if password length is greater than maximum length', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -220,19 +189,15 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid password');
     });
   });
 
-  // INTEGRATION TEST 1
   it('should throw unhatorize error is user already exist', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -245,20 +210,16 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(authMock);
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
 
-    // THEN STEP: ASSERT
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid credentials for this user');
     });
   });
 
-  // INTEGRATION TEST 2
   it('should set session data for valid credentials and send correct json response for user create successfully', async () => {
 
-    // GIVEN STEP
     const req: Request = authMockRequest(
       {},
       {
@@ -271,7 +232,6 @@ describe('Signup', () => {
     ) as Request;
     const res: Response = authMockResponse();
 
-    // WHEN STEP
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(null!);
     jest
       .spyOn(cloudinaryUploads, 'uploads')
@@ -284,7 +244,6 @@ describe('Signup', () => {
 
     await SignUp.prototype.create(req, res);
 
-    // THEN STEP
     expect(req.session?.jwt as IJWT).toBeDefined();
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({

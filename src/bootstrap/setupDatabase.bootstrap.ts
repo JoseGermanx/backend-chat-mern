@@ -6,7 +6,6 @@ import { redisConnection } from '@services/redis/redis.connection';
 
 const log: Logger = logger.createLogger('setupDatabase');
 
-// Design Pattern Singleton: https://refactoring.guru/es/design-patterns/singleton
 export default () => {
   const connect = () => {
     mongoose

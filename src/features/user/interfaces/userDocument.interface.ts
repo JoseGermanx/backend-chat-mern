@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import { INotificationSettings } from './notificationSettings.interface';
 import { ISocialLinks } from './socialLinks.interface';
 
-// Principle SOLID: Interface Segregation
 export interface IUserDocument extends Document {
   _id: string | ObjectId;
   authId: string | ObjectId;

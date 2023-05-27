@@ -3,9 +3,6 @@ import { AuthPayload } from '@auth/interfaces/authPayload.interface';
 import { IAuthDocument } from '@auth/interfaces/authDocument.interface';
 import { Iimage } from '@helpers/cloudinary/imageResult.interface';
 
-// GIVEN STEP
-
-// MOCK 1: REQUEST
 export const authMockRequest = (sessionData: IJWT, body: IAuthMock, currentUser?: AuthPayload | null, params?: unknown) => ({
   session: sessionData,
   body,
@@ -13,20 +10,18 @@ export const authMockRequest = (sessionData: IJWT, body: IAuthMock, currentUser?
   params,
 });
 
-// MOCK 2: RESPONSE
 export const authMockResponse = (): Response => {
   const res: Response = {} as Response;
-  res.status = jest.fn().mockReturnValue(res); // simular el código de status
-  res.json = jest.fn().mockReturnValue(res); // simularemos los datos con los retorne el json
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
   return res;
 };
 
-// INTERFACES
-export interface IJWT { // estructura con el token de la sesión
+export interface IJWT {
   jwt?: string;
 }
 
-export interface IAuthMock { // estructura de datos con datos que puedo enviar para diversos procesos de autenticación
+export interface IAuthMock {
   _id?: string;
   username?: string;
   email?: string;
@@ -38,17 +33,16 @@ export interface IAuthMock { // estructura de datos con datos que puedo enviar p
   confirmPassword?: string;
 }
 
-// MOCK VALUES
-export const authUserPayload: AuthPayload = { // estructura de mock como datos a validar a partir de la sesión
+export const authUserPayload: AuthPayload = {
   userId: '60263f14648fed5246e322d3',
   uId: '1621613119252066',
   username: 'Yorman',
   email: 'yorman@gmail.com',
-  avatarColor: '#9c27b0', // morado
+  avatarColor: '#9c27b0',
   iat: 12345
 };
 
-export const authMock = { // estructura de mock como documento
+export const authMock = {
   id: '60263f14648fed5246e322d3',
   uId: '1621613119252066',
   username: 'Yorman',
@@ -59,7 +53,7 @@ export const authMock = { // estructura de mock como documento
   save: () => {}
 } as unknown as IAuthDocument;
 
-export const signUpMockData = { // estructura de dato que se genera del usuario una vez de autentica, por ej: en signup process
+export const signUpMockData = {
   _id: '605727cd646eb50e668a4e13',
   uId: '92241616324557172',
   username: 'Yorman',

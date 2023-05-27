@@ -13,7 +13,7 @@
     "build": "ttsc -p .",
     "clean": "rimraf cache dist",
     "build:pro": "yarn run clean && yarn run build && gulp minifyAndOfuscate",
-    "prod": ""
+    "prod": "node dist/app.js"
   },
   "keywords": [],
   "author": "",

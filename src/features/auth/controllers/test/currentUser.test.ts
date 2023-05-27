@@ -30,18 +30,14 @@ describe('CurrentUser', () => {
 
   describe('Session Tokens CurrentUser', () => {
 
-    // INTEGRATION TEST 1
     it('should send correct json response with token and user null and isUser false', async () => {
 
-      // GIVEN STEP
       const req: Request = authMockRequest({}, { username: USERNAME, password: PASSWORD }, authUserPayload) as Request;
       const res: Response = authMockResponse();
 
-      // WHEN STEP
       jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue({} as IUserDocument);
       await CurrentUser.prototype.read(req, res);
 
-      // THEN STEP: ASSERTION
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         token: null,
@@ -50,10 +46,8 @@ describe('CurrentUser', () => {
       });
     });
 
-    // INTEGRATION TEST 2
     it('should set session token and send correct json response from redis or mongo', async () => {
 
-      // GIVEN STEP
       const req: Request = authMockRequest(
         { jwt: JWT },
         { username: USERNAME, password: PASSWORD },
@@ -61,12 +55,10 @@ describe('CurrentUser', () => {
       ) as Request;
       const res: Response = authMockResponse();
 
-      // WHEN STEP
       jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser) ||
         jest.spyOn(userService, 'getUserById').mockResolvedValue(existingUser);
       await CurrentUser.prototype.read(req, res);
 
-      // THEN STEP: ASSERTION
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         token: req.session?.jwt,

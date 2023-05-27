@@ -1,5 +1,3 @@
-// Hacer abstractiones de validaciones de los esquemas de datos para luego inyectarlos
-// mediante inyecccion de dependencias cuando manipule la logica de negocio
 import { JoiRequestValidationError } from '@helpers/errors/joiValidateError';
 import { Request } from 'express';
 import { ObjectSchema } from 'joi';
