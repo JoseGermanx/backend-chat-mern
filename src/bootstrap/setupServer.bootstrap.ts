@@ -34,7 +34,24 @@ export class ChatServer {
     this.startServer(this.app);
   }
 
+  private renewSession(req: Request, _res: Response, next: NextFunction) {
+    if (req.session && req.session.expires) {
+      const currentTime = Date.now();
+      const expirationTime = req.session.expires.getTime();
+
+      // Verificar si la sesión ha expirado
+      if (currentTime > expirationTime) {
+        // Renovar la sesión por una semana más
+        req.session.expires = new Date(currentTime + (7 * 24 * 3600000));
+      }
+    }
+
+    next();
+  }
+
+
   private securityMiddleware(app: Application): void {
+    app.use(this.renewSession);
     app.use(
       cookieSession({
         name: 'session',
