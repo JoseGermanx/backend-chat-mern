@@ -39,13 +39,13 @@ Accept: application/json
 withCredentials: true
 
 ###
-POST {{baseUrl}}/{{urlPath}}/forgot-password
+POST {{baseUrl}}/{{urlPath}}/forgot-passwordsss
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "email": "mchamorro14@escalab.tech"
+  "email": "nicol@gmail.com"
 }
 
 ###

@@ -24,13 +24,16 @@ export class Password {
       throw new BadRequestError('Invalid credentials');
     }
 
+    // url: http://localhost:3000/reset-password?token=asdasdassda231312312312123123
+
     const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(Number(config.RANDOM_BYTES)));
     const randomCharacters: string = randomBytes.toString('hex');
 
-    await authService.updatePasswordToken(`${existingUser._id}`, randomCharacters, Date.now() * 60 * 60 * 1000);
+    await authService.updatePasswordToken(`${existingUser._id}`, randomCharacters, Date.now() + 60 * 60 * 1000);
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomCharacters}`;
     const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username, resetLink);
-    emailQueue.addEmailJob('forgotPasswordEmail', { template, receiverEmail: email, subject: 'Reset your password' });
+    emailQueue.addEmailJob('forgotPasswordEmail', { template, receiverEmail: config.SENDER_EMAIL!, subject: 'Reset your password' });
+    //emailQueue.addEmailJob('forgotPasswordEmail', { template, receiverEmail: email, subject: 'Reset your password' });
     res.status(HTTP_STATUS.OK).json({ message: 'Password reset email sent.' });
   }
 
@@ -61,6 +64,7 @@ export class Password {
     const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
     emailQueue.addEmailJob('forgotPasswordEmail', {
       template,
+      //receiverEmail: config.SENDER_EMAIL!,
       receiverEmail: existingUser.email,
       subject: 'Password Reset Confirmation'
     });
