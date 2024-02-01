@@ -23,7 +23,7 @@ withCredentials: true
 
 {
   "username": "nicol13",
-  "password": "nicol"
+  "password": "nicol13"
 }
 
 ###
@@ -39,7 +39,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-POST {{baseUrl}}/{{urlPath}}/forgot-passwordsss
+POST {{baseUrl}}/{{urlPath}}/forgot-password
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -49,13 +49,13 @@ withCredentials: true
 }
 
 ###
-POST {{baseUrl}}/{{urlPath}}/reset-password/dbaa6bbc46a652e2f950abfe1bbadc438f499a0e
+POST {{baseUrl}}/{{urlPath}}/reset-password/3b5ad31bed8862432d3c211a94d45a99ee3c7be0
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 {
-  "password": "mario",
-  "confirmPassword": "mario"
+  "password": "nicol13",
+  "confirmPassword": "nicol13"
 }
 

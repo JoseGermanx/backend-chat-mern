@@ -64,8 +64,8 @@ export class Password {
     const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
     emailQueue.addEmailJob('forgotPasswordEmail', {
       template,
-      //receiverEmail: config.SENDER_EMAIL!,
-      receiverEmail: existingUser.email,
+      receiverEmail: config.SENDER_EMAIL!,
+      //receiverEmail: existingUser.email,
       subject: 'Password Reset Confirmation'
     });
     res.status(HTTP_STATUS.OK).json({ message: 'Password successfully updated.' });
