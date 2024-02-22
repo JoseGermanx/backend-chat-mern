@@ -18,7 +18,7 @@ jest.mock('@services/db/user.service');
 
 jest.useFakeTimers();
 
-describe('CurrentUser', () => {
+describe('CurrentUserController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -30,7 +30,7 @@ describe('CurrentUser', () => {
 
   describe('Session Tokens CurrentUser', () => {
 
-    it('should send correct json response with token and user null and isUser false', async () => {
+    it('Should send correct json response with token and user null and isUser false', async () => {
 
       const req: Request = authMockRequest({}, { username: USERNAME, password: PASSWORD }, authUserPayload) as Request;
       const res: Response = authMockResponse();
@@ -46,7 +46,7 @@ describe('CurrentUser', () => {
       });
     });
 
-    it('should set session token and send correct json response from redis or mongo', async () => {
+    it('Should set session token and send correct json response from redis or mongo', async () => {
 
       const req: Request = authMockRequest(
         { jwt: JWT },
