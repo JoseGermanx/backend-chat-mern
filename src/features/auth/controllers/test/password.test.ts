@@ -73,7 +73,7 @@ describe('PasswordController', () => {
     });
   });
 
-  /*describe('Update', () => {
+  describe('Update', () => {
 
     it('Should throw an error if password is empty', async () => {
 
@@ -133,5 +133,5 @@ describe('PasswordController', () => {
         message: 'Password successfully updated.'
       });
     });
-  });*/
+  });
 });
