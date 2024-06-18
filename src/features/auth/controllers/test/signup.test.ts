@@ -1,24 +1,26 @@
 import { Request, Response } from 'express';
+import { SignUp } from '../signup';
+
 import * as cloudinaryUploads from '@helpers/cloudinary/cloudinaryUploads';
 import { userQueue } from '@services/queues/user.queue';
 import { authQueue } from '@services/queues/auth.queue';
 import { UserCache } from '@services/redis/user.cache';
 import { IJWT, authMock, authMockRequest, imageMock } from '@root/shared/globals/mocks/auth.mock';
 import { authMockResponse } from '@root/shared/globals/mocks/auth.mock';
-import { SignUp } from '../signup';
+
 import { CustomError } from '@helpers/errors/customError';
 import { authService } from '@services/db/auth.service';
 import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { Iimage } from '@helpers/cloudinary/imageResult.interface';
-
 jest.useFakeTimers();
-jest.mock('@services/queues/base.queue');
+
+jest.mock('@services/queues/base.queue'); // alternativa al prototype
 jest.mock('@helpers/cloudinary/cloudinaryUploads');
 jest.mock('@services/redis/user.cache');
 jest.mock('@services/queues/user.queue');
 jest.mock('@services/queues/auth.queue');
 
-describe('Signup', () => {
+describe('SignUpController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -28,8 +30,7 @@ describe('Signup', () => {
     jest.clearAllTimers();
   });
 
-  it('should throw an error if username is not available', async () => {
-
+  it('Should throw an error if username is not available', async () => {
     const req: Request = authMockRequest(
       {},
       {
@@ -43,18 +44,16 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Username is a required field');
     });
   });
 
-  it('should throw an error if username length is less than minimum length', async () => {
-
+  it('Should throw an error if username length is less than minimum length', async () => {
     const req: Request = authMockRequest(
       {},
       {
-        username: 'ma',
+        username: 'mau',
         email: 'manny@test.com',
         password: 'qwerty',
         avatarColor: 'red',
@@ -64,18 +63,16 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeErrors().message).toEqual('Invalid username');
+      expect(error.serializeErrors().message).toEqual('Username must be at least 4 characters');
     });
   });
 
-  it('should throw an error if username length is greater than maximum length', async () => {
-
+  it('Should throw an error if username length is greater than maximum length', async () => {
     const req: Request = authMockRequest(
       {},
       {
-        username: 'leodoro2023',
+        username: 'leodorosssss',
         email: 'yorman@gmail.com',
         password: 'yordev',
         avatarColor: 'red',
@@ -85,14 +82,12 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
-      expect(error.serializeErrors().message).toEqual('Invalid username');
+      expect(error.serializeErrors().message).toEqual('Username must be at most 8 characters');
     });
   });
 
-  it('should throw an error if email is not valid', async () => {
-
+  it('Should throw an error if email is not valid', async () => {
     const req: Request = authMockRequest(
       {},
       {
@@ -106,14 +101,12 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Email must be valid');
     });
   });
 
   it('should throw an error if email is not available', () => {
-
     const req: Request = authMockRequest(
       {},
       {
@@ -127,14 +120,12 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Email is a required field');
     });
   });
 
   it('should throw an error if password is not available', async () => {
-
     const req: Request = authMockRequest(
       {},
       {
@@ -148,14 +139,12 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Password is a required field');
     });
   });
 
   it('should throw an error if password length is less than minimum length', async () => {
-
     const req: Request = authMockRequest(
       {},
       {
@@ -169,14 +158,12 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid password');
     });
   });
 
   it('should throw an error if password length is greater than maximum length', async () => {
-
     const req: Request = authMockRequest(
       {},
       {
@@ -190,14 +177,13 @@ describe('Signup', () => {
     const res: Response = authMockResponse();
 
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid password');
     });
   });
 
-  it('should throw unhatorize error is user already exist', async () => {
-
+  // INTEGRATION TEST
+  it('Should throw unhatorize error is user already exist', async () => {
     const req: Request = authMockRequest(
       {},
       {
@@ -212,14 +198,12 @@ describe('Signup', () => {
 
     jest.spyOn(authService, 'getUserByUsernameOrEmail').mockResolvedValue(authMock);
     await SignUp.prototype.create(req, res).catch((error: CustomError) => {
-
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Invalid credentials for this user');
     });
   });
 
-  it('should set session data for valid credentials and send correct json response for user create successfully', async () => {
-
+  it('Should set session data for valid credentials and send correct json response for user create successfully', async () => {
     const req: Request = authMockRequest(
       {},
       {

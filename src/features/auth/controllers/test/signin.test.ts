@@ -18,7 +18,7 @@ import { Generators } from '@helpers/generators/generators';
 
 jest.useFakeTimers();
 
-describe('SignIn', () => {
+describe('SignInController', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
@@ -28,19 +28,22 @@ describe('SignIn', () => {
     jest.clearAllTimers();
   });
 
-  it('should throw an error if username is not available', async () => {
+  it('Should throw an error if username is not available', async () => {
 
+    // GIVEN
     const req: Request = authMockRequest({}, { username: '', password: PASSWORD }) as Request;
     const res: Response = authMockResponse();
 
+    // WHEN
     await SignIn.prototype.read(req, res).catch((error: CustomError) => {
 
+    // THEN
       expect(error.statusCode).toEqual(400);
       expect(error.serializeErrors().message).toEqual('Username is a required field');
     });
   });
 
-  it('should throw an error if password is not available', async () => {
+  it('Should throw an error if password is not available', async () => {
 
     const req: Request = authMockRequest({}, { username: USERNAME, password: '' }) as Request;
     const res: Response = authMockResponse();
@@ -52,7 +55,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should throw an error if username is less than minimum length', async () => {
+  it('Should throw an error if username is less than minimum length', async () => {
 
     const req: Request = authMockRequest({}, { username: WRONG_USERNAME, password: PASSWORD }) as Request;
     const res: Response = authMockResponse();
@@ -64,7 +67,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should throw an error if username is greater than maximum length', async () => {
+  it('Should throw an error if username is greater than maximum length', async () => {
 
     const req: Request = authMockRequest({}, { username: LONG_USERNAME, password: PASSWORD }) as Request;
     const res: Response = authMockResponse();
@@ -76,7 +79,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should throw an error if password is less than minimum length', async () => {
+  it('Should throw an error if password is less than minimum length', async () => {
 
     const req: Request = authMockRequest({}, { username: USERNAME, password: WRONG_PASSWORD }) as Request;
     const res: Response = authMockResponse();
@@ -88,7 +91,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should throw an error if password is greater than maximum length', async () => {
+  it('Should throw an error if password is greater than maximum length', async () => {
 
     const req: Request = authMockRequest({}, { username: USERNAME, password: LONG_PASSWORD }) as Request;
     const res: Response = authMockResponse();
@@ -100,7 +103,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should throw "Invalid credentials" if username does not exist', async () => {
+  it('Should throw "Invalid credentials" if username does not exist', async () => {
 
     const req: Request = authMockRequest({}, { username: USERNAME, password: PASSWORD }) as Request;
     const res: Response = authMockResponse();
@@ -116,7 +119,7 @@ describe('SignIn', () => {
     });
   });
 
-  it('should set session data for valid credentials and send correct json response for login successfully', async () => {
+  it('Should set session data for valid credentials and send correct json response for login successfully', async () => {
 
     const req: Request = authMockRequest({}, { username: USERNAME, password: PASSWORD }) as Request;
     const res: Response = authMockResponse();

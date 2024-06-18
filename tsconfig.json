@@ -41,5 +41,8 @@
   ],
   "exclude": [
     "node_modules",
+    "src/features/auth/controllers/test",
+    "src/bootstrap/test",
+    "src/shared/globals/mocks"
   ]
 }

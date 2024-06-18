@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import { authMiddleware } from '@helpers/middlewares/auth-middleware';
 import { CurrentUser } from '@auth/controllers/currentUser';
+import { authMiddleware } from '@helpers/middlewares/auth-middleware';
 
 class CurrentUserRoutes {
   private router: Router;
@@ -11,6 +11,7 @@ class CurrentUserRoutes {
 
   public routes(): Router {
 
+    // chain of responsability: https://refactoring.guru/es/design-patterns/chain-of-responsibility
     this.router.get('/currentUser', authMiddleware.checkAuthentication, CurrentUser.prototype.read);
 
     return this.router;

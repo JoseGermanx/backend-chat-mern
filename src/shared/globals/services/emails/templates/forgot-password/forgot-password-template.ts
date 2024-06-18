@@ -1,5 +1,5 @@
-import fs from 'fs';
-import ejs from 'ejs';
+import fs from 'fs'; // file sync leer archivos dentro de un directorio x
+import ejs from 'ejs'; // motor de plantillas para el backend
 
 class ForgotPasswordTemplate {
   public passwordResetTemplate(username: string, resetLink: string): string {

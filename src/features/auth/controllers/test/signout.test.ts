@@ -4,7 +4,7 @@ import { SignOut } from '../signout';
 
 jest.useFakeTimers();
 
-describe('Signout', () => {
+describe('SignoutController', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });

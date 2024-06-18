@@ -18,7 +18,7 @@ jest.mock('@services/queues/email.queue');
 jest.mock('@services/db/auth.service');
 jest.mock('@services/emails/mail.transport');
 
-describe('Password', () => {
+describe('PasswordController', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
   });
