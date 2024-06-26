@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:5000
-@urlPath = api/v1
+@urlPath = api/
 
 ###
 POST {{baseUrl}}/{{urlPath}}/signup
@@ -23,7 +23,7 @@ withCredentials: true
 
 {
   "username": "nicol13",
-  "password": "nicol13"
+  "password": "nicol"
 }
 
 ###
@@ -45,7 +45,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "nicol@gmail.com"
+  "email": "jgermanmm@gmail.com"
 }
 
 ###
